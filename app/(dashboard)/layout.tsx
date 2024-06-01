@@ -21,8 +21,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
-          <LeftSideBar />
-          {children}
+          <div className="flex max-lg:flex-col text-grey-1">
+            <LeftSideBar />
+            <div className="flex-1">{children}</div>
+          </div>
         </body>
       </html>
     </ClerkProvider>
