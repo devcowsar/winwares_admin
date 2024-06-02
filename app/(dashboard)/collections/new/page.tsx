@@ -1,7 +1,8 @@
+import CollectionForm from "@/components/collections/CollectionForm";
 import React from "react";
 
 const CreateCollection = () => {
-  return <div>createCollections</div>;
+  return <CollectionForm />;
 };
 
 export default CreateCollection;
