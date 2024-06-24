@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
 
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 
@@ -26,6 +27,8 @@ const formSchema = z.object({
 });
 
 const CollectionForm = () => {
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,8 +38,16 @@ const CollectionForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/collections", {
+        method: "POST",
+        body: JSON.stringify(values),
+      });
+    } catch (err) {
+      console.log("[collections_POST]", err);
+    }
   };
 
   const router = useRouter();
