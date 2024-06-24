@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 
 import ImageUpload from "../custom ui/ImageUpload";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   title: z.string().min(2).max(20),
@@ -45,8 +46,14 @@ const CollectionForm = () => {
         method: "POST",
         body: JSON.stringify(values),
       });
+      if (res.ok) {
+        setLoading(false);
+        toast.success("Collection created successfully");
+        router.push("/collections");
+      }
     } catch (err) {
       console.log("[collections_POST]", err);
+      toast.error("Something went wrong! Please try again.");
     }
   };
 
