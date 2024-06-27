@@ -20,6 +20,7 @@ import { Textarea } from "../ui/textarea";
 
 import ImageUpload from "../custom ui/ImageUpload";
 import toast from "react-hot-toast";
+import Delete from "../custom ui/Delete";
 
 const formSchema = z.object({
   title: z.string().min(2).max(20),
@@ -44,6 +45,16 @@ const CollectionForm: FC<CollectionProps> = ({ initialData }) => {
           image: "",
         },
   });
+
+  const handleKeyPress = (
+    e:
+      | React.KeyboardEvent<HTMLElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -71,7 +82,15 @@ const CollectionForm: FC<CollectionProps> = ({ initialData }) => {
 
   return (
     <div className="p-10">
-      <p className="text-heading2-bold">Create Collection</p>
+      {initialData ? (
+        <div className="flex items-center justify-between">
+          <p className="text-heading2-bold">Edit Collection</p>
+          <Delete id={initialData._id} />
+        </div>
+      ) : (
+        <p className="text-heading2-bold">Create Collection</p>
+      )}
+
       <Separator className="bg-grey-1 mt-4 mb-7" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -82,7 +101,11 @@ const CollectionForm: FC<CollectionProps> = ({ initialData }) => {
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="Title" {...field} />
+                  <Input
+                    placeholder="Title"
+                    {...field}
+                    onKeyDown={handleKeyPress}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -95,7 +118,12 @@ const CollectionForm: FC<CollectionProps> = ({ initialData }) => {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Description" {...field} rows={5} />
+                  <Textarea
+                    placeholder="Description"
+                    {...field}
+                    rows={5}
+                    onKeyDown={handleKeyPress}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
