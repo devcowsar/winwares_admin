@@ -8,6 +8,7 @@ import Loader from "@/components/custom ui/Loader";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/custom ui/DataTable";
+import { columns } from "@/components/products/ProductColumns";
 
 const Products = () => {
   const router = useRouter();
@@ -47,6 +48,7 @@ const Products = () => {
         </Button>
       </div>
       <Separator className="bg-grey-1 my-4" />
+      <DataTable columns={columns} data={products} searchKey="title" />
     </div>
   );
 };
