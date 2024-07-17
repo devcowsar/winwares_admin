@@ -1,4 +1,5 @@
 import Collection from "@/lib/models/Collection";
+import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/mongoDb";
 import { auth } from "@clerk/nextjs/server";
 
@@ -77,6 +78,9 @@ export const DELETE= async (req:NextRequest,{params}:{params:{collectionId:strin
         await connectToDB()
 
         await Collection.findByIdAndDelete(params.collectionId)
+        await Product.updateMany({collections:params.collectionId},{
+          $pull:{collections:params.collectionId}
+        })
         
         return new NextResponse("Collection is deleted",{status:200})
 
