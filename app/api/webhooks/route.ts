@@ -5,22 +5,23 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 export const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
+  apiVersion: "2024-06-20",
   typescript: true,
 });
 
 export const POST = async (req: NextRequest) => {
   try {
-    const rawbody = await req.text();
+    const rawBody = await req.text();
     const signature = req.headers.get("Stripe-Signature") as string;
 
     const event = stripe.webhooks.constructEvent(
-      rawbody,
+      rawBody,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
+
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
-
       console.log(["webhooks_POST"], session);
 
       const customerInfo = {
@@ -28,14 +29,15 @@ export const POST = async (req: NextRequest) => {
         name: session?.customer_details?.name,
         email: session?.customer_details?.email,
       };
+
       const shippingAddress = {
-        streetNumber: session?.shipping_details?.address?.line1,
-        streetName: session?.shipping_details?.address?.line2,
+        street: session?.shipping_details?.address?.line1,
         city: session?.shipping_details?.address?.city,
         state: session?.shipping_details?.address?.state,
         postalCode: session?.shipping_details?.address?.postal_code,
         country: session?.shipping_details?.address?.country,
       };
+
       const retrieveSession = await stripe.checkout.sessions.retrieve(
         session.id,
         { expand: ["line_items.data.price.product"] }
@@ -47,7 +49,7 @@ export const POST = async (req: NextRequest) => {
         return {
           product: item.price.product.metadata.productId,
           color: item.price.product.metadata.color || "N/A",
-          size: item.price.product.metadata.metadata.size || "N/A",
+          size: item.price.product.metadata.size || "N/A",
           quantity: item.quantity,
         };
       });
@@ -58,8 +60,10 @@ export const POST = async (req: NextRequest) => {
         customerClerkId: customerInfo.clerkId,
         products: orderItems,
         shippingAddress,
+        shippingRate: session?.shipping_cost?.shipping_rate,
         totalAmount: session.amount_total ? session.amount_total / 100 : 0,
       });
+
       await newOrder.save();
 
       let customer = await Customer.findOne({ clerkId: customerInfo.clerkId });
@@ -72,8 +76,10 @@ export const POST = async (req: NextRequest) => {
           orders: [newOrder._id],
         });
       }
+
       await customer.save();
     }
+
     return new NextResponse("Order created", { status: 200 });
   } catch (err) {
     console.log("[webhooks_POST]", err);
