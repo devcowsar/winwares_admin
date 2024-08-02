@@ -27,7 +27,7 @@ export const columns: ColumnDef<OrderItemType>[] = [
     header: "Size",
   },
   {
-    accessorKey: "qunantity",
+    accessorKey: "quantity",
     header: "Quantity",
   },
 ];

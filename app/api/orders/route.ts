@@ -10,6 +10,7 @@ export const GET = async (req: NextRequest) => {
     const orders = await Order.find().sort({ createdAt: "desc" });
     const orderDetails = await Promise.all(
       orders.map(async (order) => {
+        console.log(order);
         const customer = await Customer.findOne({
           clerkId: order.customerClerkId,
         });

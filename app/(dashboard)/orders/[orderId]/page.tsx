@@ -1,8 +1,12 @@
+import { DataTable } from "@/components/custom ui/DataTable";
+import { columns } from "@/components/orderItems/OrderItemsColumns";
+
 const OrderDetails = async ({ params }: { params: { orderId: String } }) => {
   const res = await fetch(`http://localhost:3000/api/orders/${params.orderId}`);
   const { orderDetails, customer } = await res.json();
   const { street, city, state, postalCode, country } =
     orderDetails.shippingAddress;
+  console.log(orderDetails);
   return (
     <div className="flex flex-col p-10 gap-5">
       <p className="text-base-bold">
@@ -25,6 +29,11 @@ const OrderDetails = async ({ params }: { params: { orderId: String } }) => {
         Shipping rate ID:
         <span className="text-base-medium">{orderDetails.shippingRate}</span>
       </p>
+      <DataTable
+        columns={columns}
+        data={orderDetails.products}
+        searchKey="product"
+      />
     </div>
   );
 };
