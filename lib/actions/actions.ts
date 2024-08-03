@@ -36,4 +36,6 @@ export const getSalesPerMonth = async () => {
     );
     return { name: month, sales: salesPerMonth[i] || 0 };
   });
+
+  return graphData;
 };

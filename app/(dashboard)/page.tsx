@@ -1,3 +1,4 @@
+import SalesChart from "@/components/custom ui/SalesChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -43,6 +44,14 @@ export default async function Home() {
           </CardContent>
         </Card>
       </div>
+      <Card className="mt-10">
+        <CardHeader className="flex flex-row justify-between items-center">
+          <CardTitle>Sales Chart ($)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <SalesChart data={graphData} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
