@@ -6,7 +6,7 @@ import {
   getTotalSales,
 } from "@/lib/actions/actions";
 import { UserButton } from "@clerk/nextjs";
-import { CircleDollarSign } from "lucide-react";
+import { CircleDollarSign, ShoppingBag, UserRound } from "lucide-react";
 
 export default async function Home() {
   const totalRevenue = await getTotalSales().then((data) => data.totalRevenue);
@@ -25,6 +25,22 @@ export default async function Home() {
             <CircleDollarSign className="max-sm:hidden" />
           </CardHeader>
           <CardContent className="text-body-bold">$ {totalRevenue}</CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row justify-between items-center">
+            <CardTitle>Total Orders</CardTitle>
+            <ShoppingBag className="max-sm:hidden" />
+          </CardHeader>
+          <CardContent className="text-body-bold">$ {totalOrders}</CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row justify-between items-center">
+            <CardTitle>Customers</CardTitle>
+            <UserRound className="max-sm:hidden" />
+          </CardHeader>
+          <CardContent className="text-body-bold">
+            $ {totalCustomers}
+          </CardContent>
         </Card>
       </div>
     </div>
